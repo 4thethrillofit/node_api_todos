@@ -1,0 +1,17 @@
+{
+  "name": "node_todo_api",
+  "preferGlobal": true,
+  "version": "0.0.1",
+  "author": "Feifan Wang <feifanw@gmail.com>",
+  "description": "A simple Node API for a Todos app.",
+  "dependencies": {
+    "express": "3.x",
+    "mongoskin": "0.6.x",
+    "nodemon": "0.7.x"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "superagent": "0.15.x",
+    "mocha": "1.2.x"
+  }
+}
