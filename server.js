@@ -15,7 +15,7 @@ app.get('/', function(req, res){
 });
 
 // GET a specific todoList collection
-app.get('/todos/:listName', function(req, res){
+app.get('/todos/v1/:listName', function(req, res){
   req.collection.find({}, {limit: 10, sort: [['_id', -1]]}).toArray(function(err, results){
     if(err) return next(err);
     res.send(results);
@@ -23,7 +23,7 @@ app.get('/todos/:listName', function(req, res){
 });
 
 // GET a todo item
-app.get('/todos/:listName/:id', function(req, res){
+app.get('/todos/v1/:listName/:id', function(req, res){
   req.collection.findOne({_id: req.collection.id(req.params.id)}, function(err, result){
     if(err) return next(err);
     res.send(result);
@@ -31,9 +31,10 @@ app.get('/todos/:listName/:id', function(req, res){
 });
 
 // POST a new todo item
-app.post('/todos/:listName', function(req, res){
+app.post('/todos/v1/:listName', function(req, res){
   req.collection.insert(req.body, {}, function(err, results){
     if(err) return next(err);
+    res.statusCode = 201;
     res.send(results);
   });
 });
@@ -43,8 +44,19 @@ app.post('/todos/:listName', function(req, res){
 // {$set:req.body} is special Mongo operator that sets values
 // {safe:true, multi:false} tells Mongo to wait for execution b4 running callback and
 // to process only one item.
-app.put('/todos/:listName/:id', function(req, res){
+// NOT giving a status code of 204 here since we are returning a message. Same goes for DELET
+app.put('/todos/v1/:listName/:id', function(req, res){
   req.collection.update({_id: req.collection.id(req.params.id)}, {$set:req.body}, {safe:true, multi:false}, function(err, result){
+    if(err) return next(err);
+    res.send(
+      result === 1 ? {msg: 'success'} : {msg: 'error:' + err}
+    );
+  });
+});
+
+// DELETE a todo item. DELETE performs similar to PUT in Mongo
+app.del('/todos/v1/:listName/:id', function(req, res){
+  req.collection.remove({_id: req.collection.id(req.params.id)}, function(err, result){
     if(err) return next(err);
     res.send(
       result === 1 ? {msg: 'success'} : {msg: 'error:' + err}
