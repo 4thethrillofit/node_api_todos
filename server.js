@@ -1,9 +1,10 @@
 var express = require('express');
 var mongoskin = require('mongoskin');
 var app = express();
-app.use(express.bodyParser());
 var db = mongoskin.db('localhost:27017/testTodoList', {safe:true});
+var SearchClient = require('./search_client').SearchClient;
 
+app.use(express.bodyParser());
 app.param('listName', function(req, res, next, listName){
   req.collection = db.collection(listName);
   return next();
@@ -63,6 +64,10 @@ app.del('/todos/v1/:listName/:id', function(req, res){
     );
   });
 });
+
+app.get('todos/v1/:listName/search', function(req, res){
+
+}):
 
 // Start the Node server
 var server = app.listen(3000);
