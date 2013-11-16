@@ -20,5 +20,20 @@ app.get('/todos/:listName', function(req, res){
   });
 });
 
+app.get('/todos/:listName/:id', function(req, res){
+  req.collection.findOne({_id: req.collection.id(req.params.id)}, function(err, result){
+    if(err) return next(err);
+    res.send(result);
+  });
+});
+
+app.post('/todos/:listName', function(req, res){
+  console.log(req.collection.insert)
+  req.collection.insert(req.body, {}, function(err, results){
+    if(err) return next(err);
+    res.send(results);
+  });
+});
+
 var server = app.listen(3000);
 console.log("Express server listening on port %d in %s mode", server.address().port, app.settings.env);
