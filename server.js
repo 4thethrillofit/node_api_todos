@@ -2,7 +2,7 @@ var express = require('express');
 var mongoskin = require('mongoskin');
 var app = express();
 app.use(express.bodyParser());
-var db = mongoskin.db('localhost:27017/test', {safe:true});
+var db = mongoskin.db('localhost:27017/testTodoList', {safe:true});
 
 app.param('listName', function(req, res, next, listName){
   req.collection = db.collection(listName);
@@ -28,7 +28,6 @@ app.get('/todos/:listName/:id', function(req, res){
 });
 
 app.post('/todos/:listName', function(req, res){
-  console.log(req.collection.insert)
   req.collection.insert(req.body, {}, function(err, results){
     if(err) return next(err);
     res.send(results);
