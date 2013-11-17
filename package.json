@@ -8,11 +8,11 @@
     "express": "3.x",
     "mongoskin": "0.6.x",
     "nodemon": "0.7.x",
+    "superagent": "0.15.x",
     "elasticsearchclient":">=0.5.1"
   },
   "devDependencies": {
     "chai": "*",
-    "superagent": "0.15.x",
     "mocha": "1.2.x"
   }
 }
