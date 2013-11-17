@@ -4,6 +4,9 @@ var app = express();
 var db = mongoskin.db('localhost:27017/testTodoList', {safe:true});
 var SearchClient = require('./search_client').SearchClient;
 
+var _index = 'todos';
+var _type = 'document';
+
 app.use(express.bodyParser());
 app.param('listName', function(req, res, next, listName){
   req.collection = db.collection(listName);
@@ -22,6 +25,56 @@ app.get('/todos/v1/:listName', function(req, res){
     res.send(results);
   });
 });
+
+app.get('/todos/v1/:listName/create_index', function(req, res){
+  var resultsToIndex;
+  req.collection.find({}, {limit: 10, sort: [['_id', -1]]}).toArray(function(err, results){
+    if(err) return next(err);
+    resultsToIndex = results;
+    SearchClient.createIndex(_index, {}, {}).on('data', function(data){
+      var commands = [];
+      resultsToIndex.forEach(function(todoObj){
+        commands.push({'index':{'_index': _index, '_type': _type, '_id': todoObj._id}});
+        commands.push(todoObj);
+      });
+      SearchClient.bulk(commands, {})
+      .on('data', function(data){
+        res.send({result: 'Indexing successful!'});
+      })
+      .on('error', function(err){
+        res.send({result: err});
+      })
+      .exec();
+    })
+    .on('error', function(err){
+        res.send({result: err});
+    }).exec();
+    res.send(results);
+  });
+});
+
+app.get('/todos/v1/:listName/search', function(req, res){
+  console.log("HITTING THE SEARCH ROUTE")
+  var queryObj = {
+    'query': {
+      'query_string': {
+        // 'query': req.query.q
+        'query': 'test item body2'
+      }
+    }
+  }
+  console.log(queryObj)
+  SearchClient.search(_index, _type, queryObj)
+  .on('data', function(data){
+    console.log("DATA")
+    console.log(data);
+    res.send(data);
+  })
+  .on('error', function(err){
+    console.log(err);
+    res.send(err);
+  }).exec();
+})
 
 // GET a todo item
 app.get('/todos/v1/:listName/:id', function(req, res){
@@ -64,10 +117,6 @@ app.del('/todos/v1/:listName/:id', function(req, res){
     );
   });
 });
-
-app.get('todos/v1/:listName/search', function(req, res){
-
-}):
 
 // Start the Node server
 var server = app.listen(3000);
