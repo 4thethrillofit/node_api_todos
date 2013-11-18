@@ -47,11 +47,6 @@ elasticSearchClient.createBulkIndex = function(bulkDataArray, index, type){
     })
     .exec();
   })
-  .on('data', function(data){
-    console.log('finished index creation process')
-    console.log(data);
-    return data;
-  })
   .on('error', function(err){
     console.log("ERROR:");
     throw err;
