@@ -1,0 +1,44 @@
+// #!/usr/bin/env node
+var mongoskin = require('mongoskin');
+var db = mongoskin.db('localhost:27017/testTodoList', {safe:true});
+var SearchClient = require('../search_client').SearchClient;
+var argv = require('optimist').argv
+
+var listName = argv.listName ? argv.listName : "testTodoList";
+var _index = 'todos';
+var _type = 'document';
+
+var resultsToIndex; var indexedResults;
+db.collection(listName).find({}, {limit: 10, sort: [['_id', -1]]}).toArray(function(err, results){
+  if(err) throw(err);
+  resultsToIndex = results;
+  SearchClient.createIndex(_index, {}, {}).on('data', function(data){
+    var commands = [];
+    resultsToIndex.forEach(function(todoObj){
+      commands.push({'index':{'_index': _index, '_type': _type, '_id': todoObj._id}});
+      commands.push(todoObj);
+    });
+    SearchClient.bulk(commands, {})
+    .on('data', function(data){
+      console.log("Indexed DB successfully! DATA:");
+      console.log(data);
+      return data;
+    })
+    .on('error', function(err){
+      console.log("ERROR:");
+      throw err;
+    })
+    .exec();
+  })
+  .on('data', function(data){
+    console.log('finished outter index process')
+    console.log(data);
+    return data;
+  })
+  .on('error', function(err){
+    console.log("ERROR:");
+    throw err;
+  }).exec();
+  return results;
+});
+
