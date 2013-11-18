@@ -1,4 +1,4 @@
-//#!/usr/bin/env node
+#!/usr/bin/env node
 var mongoskin = require('mongoskin');
 var db = mongoskin.db('localhost:27017/testTodoList', {safe:true});
 var SearchClient = require('../search_client').SearchClient;
