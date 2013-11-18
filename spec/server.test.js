@@ -11,7 +11,7 @@ describe('Express rest API server', function(){
   var hostRoot = 'http://localhost:3000'
   var apiVersion = 'v1'
   it('POST a todo item', function(done){
-    superagent.post(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list')
+    superagent.post(hostRoot + '/'+ apiVersion +'/lists/test-todo-list')
       .send({
         title: 'test item title',
         body: 'test item body',
@@ -30,7 +30,7 @@ describe('Express rest API server', function(){
   });
 
   it('GET an todo item', function(done){
-    superagent.get(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
+    superagent.get(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
     .end(function(err, res){
       if(err) console.log(err);
       expect(err).to.equal(null);
@@ -42,7 +42,7 @@ describe('Express rest API server', function(){
   });
 
   it('GET a todo list', function(done){
-    superagent.get(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/')
+    superagent.get(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/')
       .end(function(err, res){
         if(err) console.log(err);
         expect(err).to.equal(null);
@@ -54,7 +54,7 @@ describe('Express rest API server', function(){
   });
 
   // it("indexes the entire database", function(done){
-  //   superagent.get(hostRoot + '/todos/'+ apiVersion +'/test-todo-list/create_index')
+  //   superagent.get(hostRoot + '/'+ apiVersion +'/test-todo-list/create_index')
   //     .end(function(err, res){
   //       if(err) console.log(err);
   //       expect(err).to.equal(null);
@@ -67,7 +67,7 @@ describe('Express rest API server', function(){
   // })
 
   it('PUT/update a todo item', function(done){
-    superagent.put(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
+    superagent.put(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
       .send({
         title: 'test item title2',
         body: 'test item body2',
@@ -84,7 +84,7 @@ describe('Express rest API server', function(){
   });
 
   it('checks an updated todo item', function(done){
-    superagent.get(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
+    superagent.get(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
       .end(function(err, res){
         if(err) console.log(err);
         expect(err).to.equal(null);
@@ -99,7 +99,7 @@ describe('Express rest API server', function(){
   });
 
   it('DELETE a todo item', function(done){
-    superagent.del(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
+    superagent.del(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
       .end(function(err, res){
         if(err) console.log(err);
         expect(err).to.equal(null);
@@ -111,7 +111,7 @@ describe('Express rest API server', function(){
   });
 
   it('searches the db by title', function(done){
-    // superagent.get(hostRoot + '/todos/'+ +'search/')
+    // superagent.get(hostRoot + '/'+ +'search/')
     done()
   });
 

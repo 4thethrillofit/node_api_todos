@@ -19,14 +19,14 @@ app.get('/', function(req, res){
 });
 
 // GET a specific todoList collection
-app.get('/todos/v1/lists/:listName', function(req, res){
+app.get('/v1/lists/:listName', function(req, res){
   req.collection.find({}, {limit: 10, sort: [['_id', -1]]}).toArray(function(err, results){
     if(err) return next(err);
     res.send(results);
   });
 });
 
-// app.get('/todos/v1/:listName/create_index', function(req, res){
+// app.get('/v1/:listName/create_index', function(req, res){
 //   var resultsToIndex;
 //   req.collection.find({}, {limit: 10, sort: [['_id', -1]]}).toArray(function(err, results){
 //     if(err) return next(err);
@@ -54,7 +54,7 @@ app.get('/todos/v1/lists/:listName', function(req, res){
 // });
 
 // for specific field, do q=title:test
-app.get('/todos/v1/lists/:listName/search', function(req, res){
+app.get('/v1/lists/:listName/search', function(req, res){
   var queryObj = SearchClient.buildQueryObj(req.query.q);
   console.log(queryObj)
   SearchClient.search(_index, _type, queryObj)
@@ -70,7 +70,7 @@ app.get('/todos/v1/lists/:listName/search', function(req, res){
 })
 
 // GET a todo item
-app.get('/todos/v1/lists/:listName/todos/:id', function(req, res){
+app.get('/v1/lists/:listName/todos/:id', function(req, res){
   req.collection.findOne({_id: req.collection.id(req.params.id)}, function(err, result){
     if(err) return next(err);
     res.send(result);
@@ -78,7 +78,7 @@ app.get('/todos/v1/lists/:listName/todos/:id', function(req, res){
 });
 
 // POST a new todo item
-app.post('/todos/v1/lists/:listName', function(req, res){
+app.post('/v1/lists/:listName', function(req, res){
   req.collection.insert(req.body, {}, function(err, results){
     if(err) return next(err);
     res.statusCode = 201;
@@ -92,7 +92,7 @@ app.post('/todos/v1/lists/:listName', function(req, res){
 // {safe:true, multi:false} tells Mongo to wait for execution b4 running callback and
 // to process only one item.
 // NOT giving a status code of 204 here since we are returning a message. Same goes for DELET
-app.put('/todos/v1/lists/:listName/todos/:id', function(req, res){
+app.put('/v1/lists/:listName/todos/:id', function(req, res){
   req.collection.update({_id: req.collection.id(req.params.id)}, {$set:req.body}, {safe:true, multi:false}, function(err, result){
     if(err) return next(err);
     res.send(
@@ -102,7 +102,7 @@ app.put('/todos/v1/lists/:listName/todos/:id', function(req, res){
 });
 
 // DELETE a todo item. DELETE performs similar to PUT in Mongo
-app.del('/todos/v1/lists/:listName/todos/:id', function(req, res){
+app.del('/v1/lists/:listName/todos/:id', function(req, res){
   req.collection.remove({_id: req.collection.id(req.params.id)}, function(err, result){
     if(err) return next(err);
     res.send(
