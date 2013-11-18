@@ -31,9 +31,8 @@ app.get('/v1/lists/:listName/search', function(req, res){
   var queryObj = SearchClient.buildQueryObj(req.query.q);
   SearchClient.search(_index, _type, queryObj)
   .on('data', function(data){
-    console.log("DATA")
     var results = JSON.parse(data).hits.hits.map(function(hit){ return hit._source });
-    res.send(results)
+    res.send(results);
   })
   .on('error', function(err){
     console.log(err);
@@ -53,6 +52,12 @@ app.get('/v1/lists/:listName/todos/:id', function(req, res){
 app.post('/v1/lists/:listName/todos', function(req, res){
   req.collection.insert(req.body, {}, function(err, results){
     if(err) return next(err);
+    result = results[0];
+    SearchClient.index(_index, _type, result, result._id.toString())
+    .on('err', function(err){
+      console.log(err);
+      throw err
+    }).exec();
     res.statusCode = 201;
     res.send(results);
   });
