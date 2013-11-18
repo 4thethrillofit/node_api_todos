@@ -9,7 +9,8 @@
     "mongoskin": "0.6.x",
     "nodemon": "0.7.x",
     "superagent": "0.15.x",
-    "elasticsearchclient":">=0.5.1"
+    "elasticsearchclient":">=0.5.1",
+    "unirest": "*"
   },
   "devDependencies": {
     "chai": "*",
