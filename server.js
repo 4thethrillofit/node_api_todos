@@ -15,7 +15,7 @@ app.param('listName', function(req, res, next, listName){
 
 // sending a message to user if the user does not request a specific resource
 app.get('/', function(req, res){
-  res.send('please select a collection, e.g., /todos/messages');
+  res.send('please select a todo list, e.g., /v1/lists/test-todo-list');
 });
 
 // GET a specific todoList collection
@@ -66,6 +66,24 @@ app.post('/v1/lists/:listName/todos', function(req, res){
 // NOT giving a status code of 204 here since we are returning a message. Same goes for DELET
 app.put('/v1/lists/:listName/todos/:id', function(req, res){
   req.collection.update({_id: req.collection.id(req.params.id)}, {$set:req.body}, {safe:true, multi:false}, function(err, result){
+    if(err) return next(err);
+    res.send(
+      result === 1 ? {msg: 'success'} : {msg: 'error:' + err}
+    );
+  });
+});
+
+app.put('/v1/lists/:listName/todos/:id/done', function(req, res){
+  req.collection.update({_id: req.collection.id(req.params.id)}, {$set:{done: true}}, {safe:true, multi:false}, function(err, result){
+    if(err) return next(err);
+    res.send(
+      result === 1 ? {msg: 'success'} : {msg: 'error:' + err}
+    );
+  });
+})
+
+app.put('/v1/lists/:listName/todos/:id/undone', function(req, res){
+  req.collection.update({_id: req.collection.id(req.params.id)}, {$set:{done: false}}, {safe:true, multi:false}, function(err, result){
     if(err) return next(err);
     res.send(
       result === 1 ? {msg: 'success'} : {msg: 'error:' + err}
