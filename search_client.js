@@ -8,7 +8,7 @@ var serverOptions = {
   secure: false,
   auth: {
     username: 'site',
-    password: keys.searchlyApiKey
+    password: keys.searchly.apiKey
   }
 };
 
