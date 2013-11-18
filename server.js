@@ -60,8 +60,8 @@ app.get('/v1/lists/:listName/search', function(req, res){
   SearchClient.search(_index, _type, queryObj)
   .on('data', function(data){
     console.log("DATA")
-    // console.log(data);
-    res.send(data);
+    var results = JSON.parse(data).hits.hits.map(function(hit){ return hit._source });
+    res.send(results)
   })
   .on('error', function(err){
     console.log(err);
