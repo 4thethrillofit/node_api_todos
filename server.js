@@ -154,5 +154,7 @@ app.del('/v1/lists/:listName/todos/:id', function(req, res){
 });
 
 // Start the Node server
-var server = app.listen(3000);
-console.log("Express server listening on port %d in %s mode", server.address().port, app.settings.env);
+var port = process.env.PORT || 5000;
+app.listen(port, function() {
+  console.log("Express server listening on port %d in %s mode", port, app.settings.env);
+});
