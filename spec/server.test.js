@@ -11,14 +11,13 @@ describe('Express rest API server', function(){
   var hostRoot = 'http://localhost:3000'
   var apiVersion = 'v1'
   it('POST a todo item', function(done){
-    superagent.post(hostRoot + '/'+ apiVersion +'/lists/test-todo-list')
+    superagent.post(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/todos')
       .send({
         title: 'test item title',
         body: 'test item body',
         done: false
       })
       .end(function(err, res){
-        // console.log(res.body);
         if(err) console.log(err);
         expect(err).to.equal(null);
         expect(res.statusCode).to.equal(201);
@@ -42,7 +41,7 @@ describe('Express rest API server', function(){
   });
 
   it('GET a todo list', function(done){
-    superagent.get(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/')
+    superagent.get(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/todos')
       .end(function(err, res){
         if(err) console.log(err);
         expect(err).to.equal(null);
@@ -52,19 +51,6 @@ describe('Express rest API server', function(){
         done();
       });
   });
-
-  // it("indexes the entire database", function(done){
-  //   superagent.get(hostRoot + '/'+ apiVersion +'/test-todo-list/create_index')
-  //     .end(function(err, res){
-  //       if(err) console.log(err);
-  //       expect(err).to.equal(null);
-  //       console.log(res.body)
-  //       // expect(res.statusCode).to.equal(200);
-  //       // expect(res.body.length).to.be.above(0);
-  //       // expect(res.body.map(function(todoItem){ return todoItem._id })).to.include(id);
-  //       done();
-  //     });
-  // })
 
   it('PUT/update a todo item', function(done){
     superagent.put(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
@@ -110,9 +96,15 @@ describe('Express rest API server', function(){
       });
   });
 
-  it('searches the db by title', function(done){
-    // superagent.get(hostRoot + '/'+ +'search/')
-    done()
+  it('searches the index', function(done){
+    superagent.get(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/search?q=title')
+    .end(function(err, res){
+      if(err) console.log(err);
+      expect(err).to.equal(null);
+      expect(res.statusCode).to.equal(200);
+      expect(res.body.length).to.be.above(0);
+      done();
+    })
   });
 
 });
