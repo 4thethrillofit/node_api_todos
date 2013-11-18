@@ -26,4 +26,37 @@ elasticSearchClient.buildQueryObj = function(query) {
   return queryObj;
 };
 
+// TODO: Currently the index function does not automatically terminate after the process is finished.
+elasticSearchClient.createBulkIndex = function(bulkDataArray, index, type){
+  var _this = this;
+  _this.createIndex(index, {}, {}).on('data', function(data){
+    var commands = [];
+    bulkDataArray.forEach(function(todoObj){
+      commands.push({'index':{'_index': index, '_type': type, '_id': todoObj._id}});
+      commands.push(todoObj);
+    });
+    _this.bulk(commands, {})
+    .on('data', function(data){
+      console.log("Indexed DB successfully! DATA:");
+      console.log(data);
+      return data;
+    })
+    .on('error', function(err){
+      console.log("ERROR:");
+      throw err;
+    })
+    .exec();
+  })
+  .on('data', function(data){
+    console.log('finished index creation process')
+    console.log(data);
+    return data;
+  })
+  .on('error', function(err){
+    console.log("ERROR:");
+    throw err;
+  }).exec();
+  return;
+};
+
 module.exports.SearchClient = elasticSearchClient;
