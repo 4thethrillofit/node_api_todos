@@ -73,6 +73,7 @@ app.put('/v1/lists/:listName/todos/:id', function(req, res){
   });
 });
 
+// PUT route for marking an item DONE or UNDEON
 app.put('/v1/lists/:listName/todos/:id/done', function(req, res){
   req.collection.update({_id: req.collection.id(req.params.id)}, {$set:{done: true}}, {safe:true, multi:false}, function(err, result){
     if(err) return next(err);
