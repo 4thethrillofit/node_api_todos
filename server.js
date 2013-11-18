@@ -54,15 +54,7 @@ app.get('/todos/v1/:listName/create_index', function(req, res){
 });
 
 app.get('/todos/v1/:listName/search', function(req, res){
-  console.log("HITTING THE SEARCH ROUTE")
-  var queryObj = {
-    'query': {
-      'query_string': {
-        // 'query': req.query.q
-        'query': 'test item body2'
-      }
-    }
-  }
+  var queryObj = SearchClient.buildQueryObj(req.query.q);
   console.log(queryObj)
   SearchClient.search(_index, _type, queryObj)
   .on('data', function(data){
