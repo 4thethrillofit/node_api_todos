@@ -1,5 +1,6 @@
 var superagent = require('superagent');
 var expect = require('chai').expect;
+var SearchClient = require('../search_client');
 
 // This test files uses superagent to make requests against the dev
 // Node server. It tests the API by performing RESTful operations
@@ -10,7 +11,7 @@ describe('Express rest API server', function(){
   var hostRoot = 'http://localhost:3000'
   var apiVersion = 'v1'
   it('POST a todo item', function(done){
-    superagent.post(hostRoot + '/todos/'+ apiVersion +'/testTodoList')
+    superagent.post(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list')
       .send({
         title: 'test item title',
         body: 'test item body',
@@ -29,7 +30,7 @@ describe('Express rest API server', function(){
   });
 
   it('GET an todo item', function(done){
-    superagent.get(hostRoot + '/todos/'+ apiVersion +'/testTodoList/' + id)
+    superagent.get(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
     .end(function(err, res){
       if(err) console.log(err);
       expect(err).to.equal(null);
@@ -41,19 +42,32 @@ describe('Express rest API server', function(){
   });
 
   it('GET a todo list', function(done){
-    superagent.get(hostRoot + '/todos/'+ apiVersion +'/testTodoList/')
+    superagent.get(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/')
       .end(function(err, res){
         if(err) console.log(err);
         expect(err).to.equal(null);
-      expect(res.statusCode).to.equal(200);
+        expect(res.statusCode).to.equal(200);
         expect(res.body.length).to.be.above(0);
         expect(res.body.map(function(todoItem){ return todoItem._id })).to.include(id);
         done();
       });
   });
 
+  // it("indexes the entire database", function(done){
+  //   superagent.get(hostRoot + '/todos/'+ apiVersion +'/test-todo-list/create_index')
+  //     .end(function(err, res){
+  //       if(err) console.log(err);
+  //       expect(err).to.equal(null);
+  //       console.log(res.body)
+  //       // expect(res.statusCode).to.equal(200);
+  //       // expect(res.body.length).to.be.above(0);
+  //       // expect(res.body.map(function(todoItem){ return todoItem._id })).to.include(id);
+  //       done();
+  //     });
+  // })
+
   it('PUT/update a todo item', function(done){
-    superagent.put(hostRoot + '/todos/'+ apiVersion +'/testTodoList/' + id)
+    superagent.put(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
       .send({
         title: 'test item title2',
         body: 'test item body2',
@@ -70,7 +84,7 @@ describe('Express rest API server', function(){
   });
 
   it('checks an updated todo item', function(done){
-    superagent.get(hostRoot + '/todos/'+ apiVersion +'/testTodoList/' + id)
+    superagent.get(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
       .end(function(err, res){
         if(err) console.log(err);
         expect(err).to.equal(null);
@@ -85,7 +99,7 @@ describe('Express rest API server', function(){
   });
 
   it('DELETE a todo item', function(done){
-    superagent.del(hostRoot + '/todos/'+ apiVersion +'/testTodoList/' + id)
+    superagent.del(hostRoot + '/todos/'+ apiVersion +'/lists/test-todo-list/todos/' + id)
       .end(function(err, res){
         if(err) console.log(err);
         expect(err).to.equal(null);
@@ -95,4 +109,10 @@ describe('Express rest API server', function(){
         done();
       });
   });
+
+  it('searches the db by title', function(done){
+    // superagent.get(hostRoot + '/todos/'+ +'search/')
+    done()
+  });
+
 });
