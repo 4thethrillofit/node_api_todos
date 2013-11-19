@@ -11,7 +11,7 @@ TODOS:
 TO RUN:
 ===========
 
-- Create `keys.json` (it's in `.gitignore`)
+- Create `keys.json` in the root directory (it's in `.gitignore`).
 
 ```json
 {
