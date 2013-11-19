@@ -12,6 +12,24 @@ TO RUN:
 ===========
 
 - Create `keys.json` (it's in `.gitignore`)
+
+```json
+{
+  "searchly": {
+    "apiKey": "xxxxxxxxxxxxx"
+  },
+  "mashape": {
+    "apiKey": "xxxxxxxxxxxxx"
+  },
+  "twilio": {
+    "sid": "xxxxxxxxxxxxx",
+    "authToken": "xxxxxxxxxxxxx",
+    "sendPhoneNumber": "+1 415-xxx-xxxx",
+    "receivePhoneNumber": "+1 240-xxx-xxxx"
+
+  }
+}
+```
 - Run MongoDb: `mongod`
 - If you already have data, make sure to first index the database
 `./bin/index_all_data`
