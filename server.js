@@ -85,29 +85,10 @@ app.put('/v1/lists/:listName/todos/:id/done', function(req, res){
   req.collection.update({_id: req.collection.id(req.params.id)}, {$set:{done: true}}, {safe:true, multi:false}, function(err, result){
     if(err) return next(err);
     if(result === 1) {
-      req.collection.findOne({_id: req.collection.id(req.params.id)}, function(err, result){
-        var postData = {
-          "From": keys.twilio.sendPhoneNumber,
-          "To": keys.twilio.receivePhoneNumber,
-          "Body": "You marked: \"" + result.title + "\" DONE!"
-        };
-      unirest.post("https://twilio.p.mashape.com/" + keys.twilio.sid + "/SMS/Messages.json")
-        .headers({
-          "X-Mashape-Authorization": keys.mashape.apiKey,
-          "Content-Type": "application/x-www-form-urlencoded"
-        })
-        .auth({
-          "username": keys.twilio.sid,
-          "password": keys.twilio.authToken
-        })
-        .send("From="+postData["From"])
-        .send("To="+postData["To"])
-        .send("Body="+postData["Body"])
-        .end(function(res){ console.log(res) });
-      });
-      res.send({msg: 'success'})
+      sendSMS(req, "DONE");
+      res.send({msg: 'success'});
     } else {
-      res.send({msg: 'error: ' + err})
+      res.send({msg: 'error: ' + err});
     }
   });
 })
@@ -116,26 +97,7 @@ app.put('/v1/lists/:listName/todos/:id/undone', function(req, res){
   req.collection.update({_id: req.collection.id(req.params.id)}, {$set:{done: false}}, {safe:true, multi:false}, function(err, result){
     if(err) return next(err);
     if(result === 1) {
-      req.collection.findOne({_id: req.collection.id(req.params.id)}, function(err, result){
-        var postData = {
-          "From": keys.twilio.sendPhoneNumber,
-          "To": keys.twilio.receivePhoneNumber,
-          "Body": "You marked: \"" + result.title + "\" UNDONE!"
-        };
-      unirest.post("https://twilio.p.mashape.com/" + keys.twilio.sid + "/SMS/Messages.json")
-        .headers({
-          "X-Mashape-Authorization": keys.mashape.apiKey,
-          "Content-Type": "application/x-www-form-urlencoded"
-        })
-        .auth({
-          "username": keys.twilio.sid,
-          "password": keys.twilio.authToken
-        })
-        .send("From="+postData["From"])
-        .send("To="+postData["To"])
-        .send("Body="+postData["Body"])
-        .end(function(res){ console.log(res) });
-      });
+      sendSMS(req, 'UNDONE')
       res.send({msg: 'success'})
     } else {
       res.send({msg: 'error: ' + err})
@@ -152,6 +114,29 @@ app.del('/v1/lists/:listName/todos/:id', function(req, res){
     );
   });
 });
+
+var sendSMS = function(req, todoStatus){
+  req.collection.findOne({_id: req.collection.id(req.params.id)}, function(err, result){
+    var postData = {
+      "From": keys.twilio.sendPhoneNumber,
+      "To": keys.twilio.receivePhoneNumber,
+      "Body": "You marked: \"" + result.title + "\" "+ todoStatus
+    };
+    unirest.post("https://twilio.p.mashape.com/" + keys.twilio.sid + "/SMS/Messages.json")
+      .headers({
+        "X-Mashape-Authorization": keys.mashape.apiKey,
+        "Content-Type": "application/x-www-form-urlencoded"
+      })
+      .auth({
+        "username": keys.twilio.sid,
+        "password": keys.twilio.authToken
+      })
+      .send("From="+postData["From"])
+      .send("To="+postData["To"])
+      .send("Body="+postData["Body"])
+      .end(function(res){ console.log(res) });
+  });
+};
 
 // Start the Node server
 var port = process.env.PORT || 5000;

@@ -8,7 +8,7 @@ var SearchClient = require('../search_client');
 
 describe('Express rest API server', function(){
   var id;
-  var hostRoot = 'http://localhost:3000'
+  var hostRoot = 'http://localhost:5000'
   var apiVersion = 'v1'
   it('POST a todo item', function(done){
     superagent.post(hostRoot + '/'+ apiVersion +'/lists/test-todo-list/todos')
