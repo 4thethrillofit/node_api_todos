@@ -3,8 +3,8 @@ This is a toy app that creates a Node API server for a Todos app. It uses `Expre
 
 TODOS:
 - Implement a front-end UI
-- Refactor twilio SMS code
 - Update/Remove ElasticSearch index for PUT and DELETE operations.
+OPTIONAL:
 - Add `nock` or `replay` for testing
 - Add RESTful operations for the List resource
 
